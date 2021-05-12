@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#Hooks to monitor state
+
+STATE_DOWNLOADING='python3 /opt/serverboi/scripts/patch_wf_embed.py change-stage --stage=Downloading-Client'
