@@ -1,5 +1,6 @@
 import os
 import click
+import time
 from discord import Color
 import serverboi_utils.embeds as embed_utils
 import serverboi_utils.responses as response_utils
@@ -32,7 +33,9 @@ def change_stage(stage: str):
 
 
 @cli.command()
-def finish_wf():
+@click.option("-s", "--start", "start", required=True, type=str)
+@click.option("-e", "--end", "end", required=True, type=str)
+def finish_wf(start: int, end: int):
     embed = embed_utils.form_workflow_embed(
         workflow_name=WORKFLOW_NAME,
         workflow_description=f"Workflow ID: {EXECUTION_NAME}",
@@ -40,6 +43,11 @@ def finish_wf():
         stage="Complete",
         color=Color.dark_green(),
     )
+
+    total = int(start) - int(end)
+    time = time.strftime("%M:%S", time.gmtime(total))
+
+    embed.add_field(name="Run Time", value=f"{time} minutes", inline=False)
 
     data = response_utils.form_response_data(embeds=[embed])
     response_utils.edit_response(APPLICATION_ID, INTERACTION_TOKEN, data)
