@@ -29,7 +29,6 @@ RUN dpkg --add-architecture i386 \
     && mkdir -p /opt/serverboi/scripts \
     && apt-get clean
 COPY patch_wf_embed.py /opt/serverboi/scripts/
-COPY hooks /usr/local/bin/
 RUN pip3 install setuptools \
     && pip3 install git+https://github.com/Awlsring/ServerBoi-Utils.git
 EXPOSE 63725/tcp
