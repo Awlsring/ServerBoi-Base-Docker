@@ -1,6 +1,17 @@
 FROM debian:stable-slim
+#
 LABEL maintainer="serverboi@serverboi.org"
+#
+ARG PUID=1000
+#
 ENV DEBIAN_FRONTEND=noninteractive
+ENV USER steam
+#
+COPY requirements.txt /tmp
+COPY hooks /opt/serverboi/scripts/
+COPY ping_server.py /opt/serverboi/scripts/
+COPY patch_wf_embed.py /opt/serverboi/scripts/
+#
 RUN dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get -y --no-install-recommends install apt-utils \
@@ -27,8 +38,14 @@ RUN dpkg --add-architecture i386 \
         python3-pkg-resources \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
     && mkdir -p /opt/serverboi/scripts \
-    && apt-get clean
-COPY patch_wf_embed.py /opt/serverboi/scripts/
-RUN pip3 install setuptools \
-    && pip3 install git+https://github.com/Awlsring/ServerBoi-Utils.git
+    && apt-get clean \
+    && useradd -u "${PUID}" -m "${USER}" \
+    && su "${USER}" \
+    && chmod 755 /tmp/requirements.txt \
+    && chmod 755 /opt/serverboi/scripts/* \
+    && pip3 install -r /tmp/requirements.txt \
+    && pip3 install setuptools \
+    && pip3 install git+https://github.com/Awlsring/ServerBoi-Utils.git \
+    && rm /tmp/requirements.txt
+#
 EXPOSE 63725/tcp
