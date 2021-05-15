@@ -6,26 +6,13 @@ echo "LOADING HOOKS"
 STATE_DOWNLOADING='python3 /opt/serverboi/scripts/patch_wf_embed.py change-stage --stage=Downloading-Client'
 
 STATE_STARTING_CLIENT() {
-    TIME=`expr $1 - $2`
-    if [ 780 -gt $TIME ] ; then
-        python3 /opt/serverboi/scripts/patch_wf_embed.py change-stage --stage=Starting-Client
-    else
-        python3 /opt/serverboi/scripts/patch_wf_embed.py post-new-wf --stage=Starting-Client
+    python3 /opt/serverboi/scripts/patch_wf_embed.py change-stage --stage=Starting-Client
 }
 
 COMPLETE_WORKFLOW() {
-    TIME=`expr $1 - $2`
-    if [ 780 -gt $TIME ] ; then
         python3 /opt/serverboi/scripts/patch_wf_embed.py finish-wf --start="$START" --end="$END"
-    else
-        python3 /opt/serverboi/scripts/patch_wf_embed.py new-finish-wf --start="$START" --end="$END"
-        
 }
 
 STATE_VERIFY_CLIENT(){
-    TIME=`expr $1 - $2`
-    if [ 780 -gt $TIME ] ; then
         python3 /opt/serverboi/scripts/patch_wf_embed.py change-stage --stage=Verifying-Client
-    else
-        python3 /opt/serverboi/scripts/patch_wf_embed.py post-new-wf --stage=Verifying-Client
 }
