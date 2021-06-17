@@ -11,6 +11,7 @@ COPY requirements.txt /tmp
 COPY bootstrap.py /opt/serverboi/scripts/
 COPY ping_server.py /opt/serverboi/scripts/
 COPY patch_wf_embed.py /opt/serverboi/scripts/
+COPY init.sh /opt/serverboi/scripts/
 #
 RUN dpkg --add-architecture i386 \
     && apt-get update \
