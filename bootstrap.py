@@ -22,6 +22,8 @@ START = time.time()
 
 
 def update_workflow(stage: str):
+    print(stage)
+
     embed = embed_utils.form_workflow_embed(
         workflow_name=WORKFLOW_NAME,
         workflow_description=f"Workflow ID: {EXECUTION_NAME}",
@@ -101,5 +103,9 @@ def main():
     print("Bootstraping")
     update_workflow("Starting download")
     download_client()
+    update_workflow("Starting client")
     start_client()
-    # ping_client()
+
+
+if __name__ == "__main__":
+    main()
