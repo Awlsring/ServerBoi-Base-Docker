@@ -64,10 +64,8 @@ def download_client():
 
 
 def advance_sfn():
-    token_location = f'https://serverboi-provision-token-bucket.s3-us-west-2.amazonaws.com/{EXECUTION_NAME}'
-    token = requests.get(token_location).text
     requests.post("https://api.serverboi.io/bootstrap",
-                  json={"TaskToken": token})
+                  json={"execution_id": EXECUTION_NAME})
 
 
 def start_client():

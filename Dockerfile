@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV USER steam
 #
 COPY requirements.txt /tmp
-COPY hooks /opt/serverboi/scripts/
+COPY bootstrap.py /opt/serverboi/scripts/
 COPY ping_server.py /opt/serverboi/scripts/
 COPY patch_wf_embed.py /opt/serverboi/scripts/
 #
