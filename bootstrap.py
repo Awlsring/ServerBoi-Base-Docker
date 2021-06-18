@@ -98,6 +98,7 @@ def start_client():
 
     advance_sfn()
 
+
 def ping_server(address, port):
     query_port = int(port) + 1
     print(f"Checking {address}:{query_port}")
@@ -122,5 +123,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
- 34.222.191.34:27016

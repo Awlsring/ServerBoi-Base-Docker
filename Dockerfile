@@ -9,7 +9,6 @@ ENV USER steam
 #
 COPY requirements.txt /tmp
 COPY bootstrap.py /opt/serverboi/scripts/
-COPY ping.py /opt/serverboi/scripts/
 #
 RUN dpkg --add-architecture i386 \
     && apt-get update \
