@@ -65,9 +65,9 @@ def download_client():
     process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
 
     while True:
+        print(process.stdout.readline().decode())
         if process.poll() == 0:
             break
-        print(process.stdout.readline().decode())
         update_workflow("Downloading client")
         time.sleep(30)
 
@@ -92,22 +92,24 @@ def start_client():
 
     subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
 
-    ping_server()
+    ping_server(ADDRESS, PORT)
 
     update_workflow("Client started")
 
     advance_sfn()
 
-
-def ping_server():
-    process = subprocess.Popen(
-        "python3 /opt/serverboi/scripts/ping.py", stdout=subprocess.PIPE, shell=True
-    )
+def ping_server(address, port):
+    query_port = int(port) + 1
+    print(f"Checking {address}:{query_port}")
     while True:
-        if process.poll() == 0:
+        try:
+            info = a2s.info((address, query_port))
+            print(info)
             break
-        print("No response, waiting 10 seconds.")
-        time.sleep(10)
+        except socket.timeout:
+            print("timeout")
+        except Exception as error:
+            raise Exception(error)
 
 
 def main():
@@ -120,3 +122,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+ 34.222.191.34:27016
