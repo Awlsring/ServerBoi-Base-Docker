@@ -4,21 +4,29 @@ import serverboi_utils.embeds as embed_utils
 import serverboi_utils.responses as response_utils
 from discord import Color
 import time
+import socket
 import a2s
 import requests
 
-'''
+from set_constants import (
+    ADDRESS,
+    PORT,
+    RUN_CLIENT,
+    STEAM_APP_DIR,
+    DOWNLOAD_CLIENT,
+    RUN_CLIENT,
+)
+
+"""
 Generic script to bootstrap container.
 
 Downloads game client then starts game client
 
-'''
+"""
 WORKFLOW_NAME = "Provision-Server"
-application_id = os.environ.get('APPLICATION_ID')
-interaction_token = os.environ.get('INTERACTION_TOKEN')
-EXECUTION_NAME = os.environ.get('EXECUTION_NAME')
-
-START = time.time()
+application_id = os.environ.get("APPLICATION_ID")
+interaction_token = os.environ.get("INTERACTION_TOKEN")
+EXECUTION_NAME = os.environ.get("EXECUTION_NAME")
 
 
 def update_workflow(stage: str):
@@ -51,7 +59,8 @@ def fail_wf(stage: str):
 
 def download_client():
 
-    command = os.environ.get("DOWNLOAD_CLIENT")
+    command = DOWNLOAD_CLIENT
+    print(f"Download Client Command: {command}")
 
     process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
 
@@ -62,41 +71,43 @@ def download_client():
         update_workflow("Downloading client")
         time.sleep(30)
 
+    print("Finished downloading client")
+
     advance_sfn()
 
 
 def advance_sfn():
-    requests.post("https://api.serverboi.io/bootstrap",
-                  json={"execution_id": EXECUTION_NAME})
+    requests.post(
+        "https://api.serverboi.io/bootstrap", json={"execution_id": EXECUTION_NAME}
+    )
 
 
 def start_client():
-    app_location = os.environ.get("STEAM_APP_DIR")
+    app_location = STEAM_APP_DIR
     os.chdir(app_location)
 
-    command = os.environ.get("RUN_CLIENT")
+    command = RUN_CLIENT
 
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+    print("Starting client")
 
-    while True:
-        if process.poll() == 0:
-            break
-        print(process.stdout.readline().decode())
-        update_workflow("Starting client")
-        time.sleep(5)
+    subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+
+    ping_server()
+
+    update_workflow("Client started")
 
     advance_sfn()
 
 
-def ping_client():
-    address = os.environ.get("ADDRESS")
-    port = int(os.environ.get("PORT"))
-
-    try:
-        info = a2s.info((address, port))
-        print(info)
-    except Exception as error:
-        raise error
+def ping_server():
+    process = subprocess.Popen(
+        "python3 /opt/serverboi/scripts/ping.py", stdout=subprocess.PIPE, shell=True
+    )
+    while True:
+        if process.poll() == 0:
+            break
+        print("No response, waiting 10 seconds.")
+        time.sleep(10)
 
 
 def main():
