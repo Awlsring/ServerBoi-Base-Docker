@@ -7,6 +7,7 @@ import time
 import socket
 import a2s
 import requests
+import asyncio
 
 from set_constants import (
     ADDRESS,
@@ -134,6 +135,11 @@ def main():
     download_client()
     update_workflow("Starting client")
     start_client()
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_forever
+    finally:
+        loop.close
 
 
 if __name__ == "__main__":
