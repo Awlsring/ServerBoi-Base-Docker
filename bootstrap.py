@@ -24,8 +24,8 @@ Downloads game client then starts game client
 
 """
 WORKFLOW_NAME = "Provision-Server"
-application_id = os.environ.get("APPLICATION_ID")
-interaction_token = os.environ.get("INTERACTION_TOKEN")
+APPLICATION_ID = os.environ.get("APPLICATION_ID")
+INTERACTION_TOKEN = os.environ.get("INTERACTION_TOKEN")
 EXECUTION_NAME = os.environ.get("EXECUTION_NAME")
 
 
@@ -41,7 +41,7 @@ def update_workflow(stage: str):
     )
 
     data = response_utils.form_response_data(embeds=[embed])
-    response_utils.edit_response(application_id, interaction_token, data)
+    response_utils.edit_response(APPLICATION_ID, INTERACTION_TOKEN, data)
 
 
 def fail_wf(stage: str):
@@ -54,7 +54,7 @@ def fail_wf(stage: str):
     )
 
     data = response_utils.form_response_data(embeds=[embed])
-    response_utils.edit_response(application_id, interaction_token, data)
+    response_utils.edit_response(APPLICATION_ID, INTERACTION_TOKEN, data)
 
 
 def download_client():
@@ -77,9 +77,21 @@ def download_client():
 
 
 def advance_sfn():
-    requests.post(
-        "https://api.serverboi.io/bootstrap", json={"execution_id": EXECUTION_NAME}
-    )
+    json = {
+        "application_id": APPLICATION_ID,
+        "interaction_token": INTERACTION_TOKEN,
+        "execution_name": EXECUTION_NAME,
+        "port": PORT,
+        "game": os.environ.get("GAME"),
+        "name": os.environ.get("NAME"),
+        "user_id": os.environ.get("USER_ID"),
+        "guild_id": os.environ.get("GUILD_ID"),
+        "service": os.environ.get("SERVICE"),
+        "region": os.environ.get("REGION"),
+        "instance_id": os.environ.get("INSTANCE_ID"),
+        "server_id": os.environ.get("SERVER_ID"),
+    }
+    requests.post("https://api.serverboi.io/bootstrap", json=json)
 
 
 def start_client():
