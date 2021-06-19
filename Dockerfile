@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM debian:buster-slim
 #
 LABEL maintainer="serverboi@serverboi.org"
 #
@@ -34,6 +34,7 @@ RUN dpkg --add-architecture i386 \
         ca-certificates \
         python3-minimal \
         python3-pkg-resources \
+        screen \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
     && mkdir -p /opt/serverboi/scripts \
     && apt-get clean \
