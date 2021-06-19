@@ -88,7 +88,6 @@ def advance_sfn():
         "guild_id": os.environ.get("GUILD_ID"),
         "service": os.environ.get("SERVICE"),
         "region": os.environ.get("REGION"),
-        "instance_id": os.environ.get("INSTANCE_ID"),
         "server_id": os.environ.get("SERVER_ID"),
     }
     requests.post("https://api.serverboi.io/bootstrap", json=json)
@@ -112,7 +111,7 @@ def start_client():
 
 
 def ping_server(address, port):
-    query_port = int(port) + 1
+    query_port = int(port)
     print(f"Checking {address}:{query_port}")
     while True:
         try:
@@ -121,6 +120,10 @@ def ping_server(address, port):
             break
         except socket.timeout:
             print("timeout")
+            if int(port) == query_port:
+                query_port = int(port + 1)
+            else:
+                query_port = query_port - 1
         except Exception as error:
             raise Exception(error)
 
