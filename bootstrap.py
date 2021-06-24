@@ -137,9 +137,9 @@ def main():
     start_client()
     loop = asyncio.get_event_loop()
     try:
-        loop.run_forever
+        loop.run_forever()
     finally:
-        loop.close
+        loop.close()
 
 
 if __name__ == "__main__":
